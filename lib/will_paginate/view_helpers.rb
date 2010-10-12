@@ -32,7 +32,8 @@ module WillPaginate
       :params         => nil,
       :renderer       => 'WillPaginate::LinkRenderer',
       :page_links     => true,
-      :container      => true
+      :container      => true,
+      :rel_value_base => nil # contents applied to each per-link rel=""
     }
     mattr_reader :pagination_options
 
@@ -358,11 +359,12 @@ module WillPaginate
   private
 
     def rel_value(page)
-      case page
-      when @collection.previous_page; 'prev' + (page == 1 ? ' start' : '')
-      when @collection.next_page; 'next'
-      when 1; 'start'
-      end
+      rel = case page
+        when @collection.previous_page; 'prev' + (page == 1 ? ' start' : '')
+        when @collection.next_page; 'next'
+        when 1; 'start'
+        end
+      "#{rel} #{@@pagination_options[:rel_value_base]}"
     end
 
     def current_page
