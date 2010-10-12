@@ -364,7 +364,12 @@ module WillPaginate
         when @collection.next_page; 'next'
         when 1; 'start'
         end
-      "#{rel} #{@@pagination_options[:rel_value_base]}"
+      rel_value_base = WillPaginate::ViewHelpers.pagination_options[:rel_value_base]
+      if rel || rel_value_base
+        "#{rel} #{rel_value_base}".gsub(/(?: ^\s+ | \s+$)/x, '') # trim whitespace
+      else 
+        nil
+      end
     end
 
     def current_page
